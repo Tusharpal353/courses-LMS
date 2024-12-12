@@ -12,6 +12,7 @@ const router= useRouter()
 const handleSubmit = ()=>{
   const response =   axios.post("/api/signup",{username,email,password})
   console.log(response)
+  
     router.push("/signin")
 
 }

@@ -1,9 +1,24 @@
-import { Clock, User } from 'lucide-react'
-import React from 'react'
+"use client"
 
-const Card = ({title,description,duration,instructor}) => {
+import { Clock, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+    
+
+
+const Card = ({title,description,duration,instructor,id}) => {
+
+  const router = useRouter()
+const handleClick = ()=>{
+  router.push(`/courses/${id}`)
+
+}
+
+
+
+
   return (
-    <div className='border-2 m-10  rounded-xl shadow-md cursor-pointer'>
+    <div className='border-2 m-10  rounded-xl shadow-md cursor-pointer'  onClick={handleClick}>
         <div className='p-6'>
             <h2 className='font-bold text-2xl'>{title}</h2>
             <h1 className='flex-wrap text-md text-gray-600'>{description}</h1>

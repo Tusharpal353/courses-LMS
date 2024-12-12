@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 
-export default function SearchBar() {
+export default function SearchBar({setSearchQuery}) {
+
+  const handleChange = (e)=>{
+    setSearchQuery(e.target.value)
+  };
 
 
 
@@ -11,11 +15,13 @@ export default function SearchBar() {
     <div className="py-8">
       <div className="container mx-auto px-4">
         <form
+        onSubmit={(e)=>e.preventDefault()}
       
           className="flex items-center justify-center">
           <input
             type="text"
             placeholder="Search courses..."
+            onChange={handleChange}
         
             
             className="w-full max-w-md px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
@@ -31,4 +37,5 @@ export default function SearchBar() {
     </div>
   )
 }
+
 

@@ -7,7 +7,7 @@ export  async function GET(req:NextRequest){
     const courses = await Courses.find()
         return NextResponse.json({
             courses,
-            message:"courses fetched"
+           
         }
         )
   
