@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Course from '@/models/courses/courses';
 
-export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
+/* export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
     const { courseId } = context.params;
   
     await dbConnect();
@@ -22,7 +22,36 @@ export async function DELETE(req: NextRequest, context: { params: { courseId: st
       );
     }
   }
+ */
 
+  
+  export async function DELETE(req: NextRequest, { params }: { params: { courseId: string } }) {
+    const { courseId } = params;
+  
+    await dbConnect();
+  
+    try {
+      // Ensure the courseId is valid before making the database call
+      if (!courseId) {
+        return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
+      }
+  
+      // Attempt to delete the course by its ID
+      const deletedCourse = await Course.findByIdAndDelete(courseId);
+  
+      if (!deletedCourse) {
+        return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      }
+  
+      return NextResponse.json({ message: "Course deleted successfully" });
+    } catch (error) {
+      return NextResponse.json(
+        { error: "Failed to delete the course", details: error.message },
+        { status: 500 }
+      );
+    }
+  }
+  
 export async function PUT(req: NextRequest) {
   try {
     // Extract the courseId from the URL
