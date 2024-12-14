@@ -2,24 +2,26 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Course from '@/models/courses/courses';
 
-export async function DELETE(req: NextRequest, { params }: { params: { courseId: string } }) {
-  const { courseId } = params;
-
-  await dbConnect();
-
-  try {
-    const deletedCourse = await Course.findByIdAndDelete(courseId);
-
-    if (!deletedCourse) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
+    const { courseId } = context.params;
+  
+    await dbConnect();
+  
+    try {
+      const deletedCourse = await Course.findByIdAndDelete(courseId);
+  
+      if (!deletedCourse) {
+        return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      }
+  
+      return NextResponse.json({ message: "Course deleted successfully" });
+    } catch (error: any) {
+      return NextResponse.json(
+        { error: "Failed to delete the course", details: error.message },
+        { status: 500 }
+      );
     }
-
-    return NextResponse.json({ message: "Course deleted successfully" });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to delete the course", details: error.message }, { status: 500 });
   }
-}
-
 
 export async function PUT(req: NextRequest) {
   try {
