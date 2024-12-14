@@ -1,0 +1,14 @@
+# Ignore specific files
+app/api/admin/courses/route.ts
+app/api/admin/login/route.ts
+
+# Ignore entire folders
+node_modules
+dist
+build
+
+# Ignore all JavaScript files in a folder
+lib/*.js
+
+# Ignore all .test.ts files
+*.test.ts
