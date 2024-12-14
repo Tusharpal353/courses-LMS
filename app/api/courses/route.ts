@@ -1,3 +1,6 @@
+
+//for loading courses on the admin dashboard
+
 import dbConnect from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import Courses from '@/models/courses/courses';

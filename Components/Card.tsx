@@ -18,7 +18,7 @@ const handleClick = ()=>{
 
 
   return (
-    <div className='border-2 m-10  rounded-xl shadow-md cursor-pointer'  onClick={handleClick}>
+    <div className='border-2 m-10  rounded-xl shadow-md   cursor-pointer'  onClick={handleClick}>
         <div className='p-6'>
             <h2 className='font-bold text-2xl'>{title}</h2>
             <h1 className='flex-wrap text-md text-gray-600'>{description}</h1>

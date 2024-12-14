@@ -4,14 +4,14 @@ import Card from "./Card";
 import Banner from "./Banner";
 import SearchBar from "@/Components/SearchBar";
 import { useEffect, useState } from "react";
-
+import AppBar from "@/Components/AppBar"
 // Fetching course data
 async function fetchData() {
   const response = await axios.get("http://localhost:3000/api/courses");
   return response.data;
 }
 
-export default function LandingPage() {
+const LandingPage=()=> {
   const [courses, setCourses] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");  // Initialize as empty string
   const [filteredCourses, setFilteredCourses] = useState([]);
@@ -43,13 +43,15 @@ export default function LandingPage() {
 
   return (
     <div>
+      <AppBar/>
       <Banner />
       <SearchBar setSearchQuery={setSearchQuery} />
       <h1 className="font-bold text-3xl text-center py-8">All Courses</h1>
-      <div className="grid grid-cols-2 mx-20">
+      <div className="grid grid-cols-2 mx-20 ">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((data) => (
             <Card
+            
               key={data._id}
               title={data.title}
               description={data.description}
@@ -65,3 +67,4 @@ export default function LandingPage() {
     </div>
   );
 }
+export default LandingPage
