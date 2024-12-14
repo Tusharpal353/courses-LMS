@@ -21,37 +21,38 @@ export async function DELETE(req: NextRequest, { params }: { params: { courseId:
 }
 
 
-export async function PUT(
-    req: NextRequest,
-    context: { params: { courseId: string } } // Use "context" as the second argument, matching Next.js conventions
-  ) {
-    const { courseId } = context.params;
-  
+export async function PUT(req: NextRequest) {
+  try {
+    // Extract the courseId from the URL
+    const { pathname } = req.nextUrl;
+    const courseId = pathname.split("/").pop(); // Get the last part of the URL
+
+    // Parse the request body
     const { title, description, duration, instructor } = await req.json();
-  
+
+    // Connect to the database
     await dbConnect();
-  
-    try {
-      const updatedCourse = await Course.findByIdAndUpdate(
-        courseId,
-        { title, description, duration, instructor },
-        { new: true }
-      );
-  
-      if (!updatedCourse) {
-        return NextResponse.json({ error: 'Course not found' }, { status: 404 });
-      }
-  
-      return NextResponse.json({
-        message: 'Course updated successfully',
-        course: updatedCourse,
-      });
-    } catch (error: any) {
-      console.error('Error updating course:', error);
-      return NextResponse.json(
-        { error: 'Failed to update the course', details: error.message },
-        { status: 500 }
-      );
+
+    // Update the course
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseId,
+      { title, description, duration, instructor },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedCourse) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
     }
+
+    return NextResponse.json({
+      message: "Course updated successfully",
+      course: updatedCourse,
+    });
+  } catch (error: any) {
+    console.error("Error updating course:", error);
+    return NextResponse.json(
+      { error: "Failed to update the course", details: error.message },
+      { status: 500 }
+    );
   }
-  
+}
