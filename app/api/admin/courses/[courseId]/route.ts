@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Course from '@/models/courses/courses';
+import { ObjectId } from 'mongodb';
 
 /* export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
     const { courseId } = context.params;
@@ -27,7 +28,7 @@ import Course from '@/models/courses/courses';
   
 
 // Fixing the type for `params` in context
-export async function DELETE(req: NextRequest, context: { params: { courseId: any } }) {
+export async function DELETE(req: NextRequest, context: { params: { courseId :ObjectId} }) {
     const { courseId } = context.params;
   
     await dbConnect();
