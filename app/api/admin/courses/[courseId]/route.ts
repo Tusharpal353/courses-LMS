@@ -25,7 +25,7 @@ import Course from '@/models/courses/courses';
  */
 
   
-  export async function DELETE(req: NextRequest, { params }: { params: { courseId: string } }) {
+  export async function DELETE(req: NextRequest, { params }: { params: { courseId: any } }) {
     const { courseId } = params;
   
     await dbConnect();
