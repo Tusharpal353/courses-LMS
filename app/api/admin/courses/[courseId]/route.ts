@@ -25,13 +25,15 @@ import Course from '@/models/courses/courses';
  */
 
   
-  export async function DELETE(req: NextRequest, { params }: { params: { courseId: any } }) {
-    const { courseId } = params;
+
+// Fixing the type for `params` in context
+export async function DELETE(req: NextRequest, context: { params: { courseId: any } }) {
+    const { courseId } = context.params;
   
     await dbConnect();
   
     try {
-      // Ensure the courseId is valid before making the database call
+      // Ensure courseId is valid
       if (!courseId) {
         return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
       }
@@ -44,7 +46,7 @@ import Course from '@/models/courses/courses';
       }
   
       return NextResponse.json({ message: "Course deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       return NextResponse.json(
         { error: "Failed to delete the course", details: error.message },
         { status: 500 }
