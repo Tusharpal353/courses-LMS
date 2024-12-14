@@ -2,7 +2,7 @@
 
 import User from "@/models/users/user";
 import { NextResponse, NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+
 import dbConnect from "@/lib/db";
 const SECRET_KEY = process.env.JWT_SECRET;
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const token = jwt.sign(
+   /*  const token = jwt.sign(
       {
         id: userExists.id,
         email: userExists.email,
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       {
         expiresIn: "1h",
       }
-    );
+    ); */
 
     return NextResponse.json(
       { message: "Login successful" },

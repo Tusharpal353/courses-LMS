@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectToDb from "@/lib/db";
+
 import Courses from "@/models/courses/courses"; // Make sure this model is correctly imported
 import dbConnect from "@/lib/db";
 

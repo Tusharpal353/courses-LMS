@@ -2,7 +2,7 @@ import dbConnect from "@/lib/db";
 import User from "@/models/users/user";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import Email from "next-auth/providers/email";
+
 
 const handler = NextAuth({
   providers: [

@@ -1,9 +1,14 @@
 import React from 'react';
 import { Book, User, MessageSquare, Check } from 'lucide-react';
 
-// Fetching course details on the server side
-const CourseDetailsPage = async ({ params }) => {
-  // Fetch data for the specific course
+interface CourseDetailsPageProps {
+  params: {
+    courseId: string;
+  };
+}
+
+const CourseDetailsPage = async ({ params}:CourseDetailsPageProps ) => {
+
   const res = await fetch(`http://localhost:3000/api/courses/${params.courseId}`);
   
   if (!res.ok) {

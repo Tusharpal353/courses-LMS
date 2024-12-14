@@ -4,17 +4,27 @@ import Card from "./Card";
 import Banner from "./Banner";
 import SearchBar from "@/Components/SearchBar";
 import { useEffect, useState } from "react";
-import AppBar from "@/Components/AppBar"
+import AppBar from "@/Components/AppBar";
+
 // Fetching course data
-async function fetchData() {
+async function fetchData(): Promise<{ courses: Course[] }> {
   const response = await axios.get("http://localhost:3000/api/courses");
   return response.data;
 }
 
-const LandingPage=()=> {
-  const [courses, setCourses] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");  // Initialize as empty string
-  const [filteredCourses, setFilteredCourses] = useState([]);
+// Define the Course type
+interface Course {
+  _id: string;
+  title: string;
+  description: string;
+  duration: number;
+  instructor: string;
+}
+
+const LandingPage = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>(""); // Initialize as empty string
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([]);
 
   // Fetch courses when the component mounts
   useEffect(() => {
@@ -43,15 +53,14 @@ const LandingPage=()=> {
 
   return (
     <div>
-      <AppBar/>
+      <AppBar />
       <Banner />
       <SearchBar setSearchQuery={setSearchQuery} />
       <h1 className="font-bold text-3xl text-center py-8">All Courses</h1>
-      <div className="grid grid-cols-2 mx-20 ">
+      <div className="grid grid-cols-2 mx-20">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((data) => (
             <Card
-            
               key={data._id}
               title={data.title}
               description={data.description}
@@ -61,10 +70,11 @@ const LandingPage=()=> {
             />
           ))
         ) : (
-          <p className="text-center text-xl">No courses found</p>  // Handle no results
+          <p className="text-center text-xl">No courses found</p> // Handle no results
         )}
       </div>
     </div>
   );
-}
-export default LandingPage
+};
+
+export default LandingPage;
