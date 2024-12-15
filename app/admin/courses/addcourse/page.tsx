@@ -3,19 +3,23 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { Book, Clock, User, FileText } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 const CreateCourse = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [duration, setDuration] = useState(0)
   const [instructor, setInstructor] = useState("")
-
+const router = useRouter()
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
       const response = await axios.post("/api/admin/courses", { title, description, duration, instructor })
       console.log(response.data)
       // Handle success (e.g., show a success message, reset form, redirect)
+      if(response.data.message ==="Course created successfully"){
+        router.push("/admin/dashboard")
+      }
     } catch (error) {
       console.error("Error creating course:", error)
       // Handle error (e.g., show an error message)
@@ -90,8 +94,10 @@ const CreateCourse = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+          
           <button
             type="submit"
+            onClick={handleSubmit}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
             Create Course

@@ -1,6 +1,7 @@
 "use client";
 import AppBar from "@/Components/AppBar";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 async function fetchData() {
@@ -20,7 +21,7 @@ const AdminDashboard = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [editMode, setEditMode] = useState<string | null>(null);
   const [updatedCourse, setUpdatedCourse] = useState<Partial<Course>>({});
-
+  const router = useRouter()
   useEffect(() => {
     const fetchCourses = async () => {
       const data = await fetchData();
@@ -68,6 +69,12 @@ const AdminDashboard = () => {
       <AppBar />
       <div className="p-10">
         <h1 className="font-bold text-3xl text-center py-8">Admin Dashboard</h1>
+      <button  className="bg-blue-400 text-white px-4 py-2 rounded" onClick={()=>{
+        router.push("/admin/courses/addcourse ")
+
+      }}>
+        Create course
+      </button>
         <div className="grid grid-cols-2 gap-6">
           {courses.length > 0 ? (
             courses.map((course) => (
