@@ -26,38 +26,38 @@ import { ObjectId } from 'mongodb';
  */
 
   
-
+/* 
 // Fixing the type for `params` in context
 export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
-  const { courseId } = context.params;
-
-  await dbConnect();
-
-  try {
-    // Ensure courseId is valid
-    if (!courseId) {
-      return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
+    const { courseId } = context.params;
+  
+    await dbConnect();
+  
+    try {
+      // Ensure courseId is valid
+      if (!courseId) {
+        return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
+      }
+  
+      // Convert string courseId to ObjectId
+      const courseObjectId = new ObjectId(courseId);
+  
+      // Attempt to delete the course by its ID
+      const deletedCourse = await Course.findByIdAndDelete(courseObjectId);
+  
+      if (!deletedCourse) {
+        return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      }
+  
+      return NextResponse.json({ message: "Course deleted successfully" });
+    } catch (error: any) {
+      return NextResponse.json(
+        { error: "Failed to delete the course", details: error.message },
+        { status: 500 }
+      );
     }
-
-    // Convert string courseId to ObjectId
-    const courseObjectId = new ObjectId(courseId);
-
-    // Attempt to delete the course by its ID
-    const deletedCourse = await Course.findByIdAndDelete(courseObjectId);
-
-    if (!deletedCourse) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({ message: "Course deleted successfully" });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: "Failed to delete the course", details: error.message },
-      { status: 500 }
-    );
   }
-}
-Key
+
   
 export async function PUT(req: NextRequest) {
   try {
@@ -90,6 +90,91 @@ export async function PUT(req: NextRequest) {
     console.error("Error updating course:", error);
     return NextResponse.json(
       { error: "Failed to update the course", details: error.message },
+      { status: 500 }
+    );
+  }
+}
+ */
+
+
+type CourseParams = {
+  courseId: string;
+};
+
+export async function DELETE(
+  req: NextRequest, 
+  context: { params: CourseParams }
+) {
+  await dbConnect();
+
+  try {
+    const { courseId } = context.params;
+
+    // Ensure courseId is valid
+    if (!courseId) {
+      return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
+    }
+
+    // Convert string courseId to ObjectId
+    const courseObjectId = new ObjectId(courseId);
+
+    // Attempt to delete the course by its ID
+    const deletedCourse = await Course.findByIdAndDelete(courseObjectId);
+
+    if (!deletedCourse) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Course deleted successfully" });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { 
+        error: "Failed to delete the course", 
+        details: error instanceof Error ? error.message : String(error)
+      }, 
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  req: NextRequest, 
+  context: { params: CourseParams }
+) {
+  try {
+    // Extract the courseId from the context params
+    const { courseId } = context.params;
+
+    // Parse the request body
+    const { title, description, duration, instructor } = await req.json();
+
+    // Connect to the database
+    await dbConnect();
+
+    // Convert string courseId to ObjectId
+    const courseObjectId = new ObjectId(courseId);
+
+    // Update the course
+    const updatedCourse = await Course.findByIdAndUpdate(
+      courseObjectId,
+      { title, description, duration, instructor },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedCourse) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      message: "Course updated successfully",
+      course: updatedCourse,
+    });
+  } catch (error: unknown) {
+    return NextResponse.json(
+      { 
+        error: "Failed to update the course", 
+        details: error instanceof Error ? error.message : String(error)
+      }, 
       { status: 500 }
     );
   }
