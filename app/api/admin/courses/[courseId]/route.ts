@@ -26,81 +26,11 @@ import { ObjectId } from 'mongodb';
  */
 
   
-/* 
-// Fixing the type for `params` in context
-export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
-    const { courseId } = context.params;
-  
-    await dbConnect();
-  
-    try {
-      // Ensure courseId is valid
-      if (!courseId) {
-        return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
-      }
-  
-      // Convert string courseId to ObjectId
-      const courseObjectId = new ObjectId(courseId);
-  
-      // Attempt to delete the course by its ID
-      const deletedCourse = await Course.findByIdAndDelete(courseObjectId);
-  
-      if (!deletedCourse) {
-        return NextResponse.json({ error: "Course not found" }, { status: 404 });
-      }
-  
-      return NextResponse.json({ message: "Course deleted successfully" });
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: "Failed to delete the course", details: error.message },
-        { status: 500 }
-      );
-    }
-  }
-
-  
-export async function PUT(req: NextRequest) {
-  try {
-    // Extract the courseId from the URL
-    const { pathname } = req.nextUrl;
-    const courseId = pathname.split("/").pop(); // Get the last part of the URL
-
-    // Parse the request body
-    const { title, description, duration, instructor } = await req.json();
-
-    // Connect to the database
-    await dbConnect();
-
-    // Update the course
-    const updatedCourse = await Course.findByIdAndUpdate(
-      courseId,
-      { title, description, duration, instructor },
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedCourse) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
-    }
-
-    return NextResponse.json({
-      message: "Course updated successfully",
-      course: updatedCourse,
-    });
-  } catch (error: any) {
-    console.error("Error updating course:", error);
-    return NextResponse.json(
-      { error: "Failed to update the course", details: error.message },
-      { status: 500 }
-    );
-  }
-}
- */
-
-
 type CourseParams = {
   courseId: string;
 };
 
+// Fixing the type for `params` in context
 export async function DELETE(
   req: NextRequest, 
   context: { params: CourseParams }
@@ -136,14 +66,12 @@ export async function DELETE(
     );
   }
 }
-
-export async function PUT(
-  req: NextRequest, 
-  context: { params: CourseParams }
-) {
+  
+export async function PUT(req: NextRequest) {
   try {
-    // Extract the courseId from the context params
-    const { courseId } = context.params;
+    // Extract the courseId from the URL
+    const { pathname } = req.nextUrl;
+    const courseId = pathname.split("/").pop(); // Get the last part of the URL
 
     // Parse the request body
     const { title, description, duration, instructor } = await req.json();
@@ -151,12 +79,9 @@ export async function PUT(
     // Connect to the database
     await dbConnect();
 
-    // Convert string courseId to ObjectId
-    const courseObjectId = new ObjectId(courseId);
-
     // Update the course
     const updatedCourse = await Course.findByIdAndUpdate(
-      courseObjectId,
+      courseId,
       { title, description, duration, instructor },
       { new: true } // Return the updated document
     );
@@ -169,12 +94,10 @@ export async function PUT(
       message: "Course updated successfully",
       course: updatedCourse,
     });
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.error("Error updating course:", error);
     return NextResponse.json(
-      { 
-        error: "Failed to update the course", 
-        details: error instanceof Error ? error.message : String(error)
-      }, 
+      { error: "Failed to update the course", details: error.message },
       { status: 500 }
     );
   }
