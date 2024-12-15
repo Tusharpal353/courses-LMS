@@ -7,7 +7,7 @@ interface CourseDetailsPageProps {
   };
 }
 
-const CourseDetailsPage = async ({ params}:CourseDetailsPageProps ) => {
+const CourseDetailsPage = async ({ params}:any ) => {
 
   const res = await fetch(`http://localhost:3000/api/courses/${params.courseId}`);
   

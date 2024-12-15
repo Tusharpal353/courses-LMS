@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import Course from '@/models/courses/courses';
-import { ObjectId } from 'mongodb';
+import { NextRequest, NextResponse } from "next/server";
+import dbConnect from "@/lib/db";
+import Course from "@/models/courses/courses";
+import { ObjectId } from "mongodb";
 
 /* export async function DELETE(req: NextRequest, context: { params: { courseId: string } }) {
     const { courseId } = context.params;
@@ -25,24 +25,28 @@ import { ObjectId } from 'mongodb';
   }
  */
 
-  
-type CourseParams = {
-  courseId: string;
+export type CourseParams = {
+  params: {
+    courseId: string;
+  };
 };
 
 // Fixing the type for `params` in context
-export async function DELETE(
-  req: NextRequest, 
-  context: { params: CourseParams }
-) {
-  await dbConnect();
-
+export async function DELETE(req: NextRequest) {
   try {
-    const { courseId } = context.params;
+    // Extract the courseId from the URL
+    const { pathname } = req.nextUrl;
+    const courseId = pathname.split("/").pop(); // Get the last part of the URL
+
+    // Connect to the database
+    await dbConnect();
 
     // Ensure courseId is valid
     if (!courseId) {
-      return NextResponse.json({ error: "Course ID is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Course ID is required" },
+        { status: 400 }
+      );
     }
 
     // Convert string courseId to ObjectId
@@ -56,17 +60,18 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: "Course deleted successfully" });
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.error("Error deleting course:", error);
     return NextResponse.json(
       { 
         error: "Failed to delete the course", 
-        details: error instanceof Error ? error.message : String(error)
-      }, 
+        details: error.message 
+      },
       { status: 500 }
     );
   }
 }
-  
+
 export async function PUT(req: NextRequest) {
   try {
     // Extract the courseId from the URL
